@@ -4,9 +4,10 @@ import mu "vendor:microui"
 
 ui_update :: proc(ctx : ^mu.Context) {
 
-	if mu.window(ctx, "Edit Params", mu.Rect{0,0,200,100}) {
+	if mu.window(ctx, "Edit Params", mu.Rect{0,0,200,100}, {.NO_CLOSE}) {
 		
-		mu.layout_row(ctx, {-1}, 0)
+		mu.layout_row(ctx, {80,-1}, 0)
+		mu.label(ctx, "Sensor Angle")
 		mu.slider(ctx, &sensor_angle, 0.0, 90.0,)
 
 	}

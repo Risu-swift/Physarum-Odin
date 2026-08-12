@@ -65,6 +65,38 @@ ui_render :: proc(ctx: ^mu.Context) {
 			case ^mu.Command_Rect:
 				rl.DrawRectangle(c.rect.x, c.rect.y, c.rect.w, c.rect.h, transmute(rl.Color)c.color)
 			case ^mu.Command_Text:
+				x :=  f32(c.pos.x)
+
+				for ch in c.str {
+					//Get Rect from Font Atlas
+					src := mu.default_atlas[mu.DEFAULT_ATLAS_FONT + min(int(ch),127)]
+					srcRect := rl.Rectangle{
+						f32(src.x),
+						f32(src.y),
+						f32(src.w),
+						f32(src.h)
+					}
+					//Render the font
+					rl.DrawTextureRec(atlas, srcRect, {x,f32(c.pos.y)}, transmute(rl.Color)c.color)
+					x += f32(src.w)
+				}
+
+			case ^mu.Command_Icon:
+				rect := mu.default_atlas[c.id]
+				posx := c.rect.x + (c.rect.w - rect.w) / 2
+				posy := c.rect.y + (c.rect.h - rect.h) / 2
+
+				srcRect := rl.Rectangle {
+					f32(rect.x),
+					f32(rect.y),
+					f32(rect.w),
+					f32(rect.h)
+				}
+
+				rl.DrawTextureRec(atlas, srcRect, {f32(posx), f32(posy)} , transmute(rl.Color)c.color )
+
+			//TODO : Implement jump and clip
+
 		}
 
 	}
