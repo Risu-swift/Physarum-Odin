@@ -56,7 +56,8 @@ main :: proc() {
 
 
 		rl.BeginDrawing()
-			render_ui()
+			rl.ClearBackground(rl.BLACK)
+			ui_render(mu_ctx)
 			render_agents(agents[:])
 		rl.EndDrawing()
 
