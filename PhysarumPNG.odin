@@ -1,6 +1,5 @@
 package main
 
-import "core:math/rand"
 import mu "vendor:microui"
 import rl "vendor:raylib"
 
@@ -10,7 +9,7 @@ Agent :: struct {
 	angle: f32,
 }
 
-AGENT_COUNT: int : 5
+AGENT_COUNT: int : 50
 SIM_STEPS: int = 5
 sensor_distance: f32 = 50.0
 sensor_angle: f32 = 30.0
@@ -20,6 +19,8 @@ HEIGHT: i32 : 720
 
 sim_width: i32 : 960
 sim_height: i32 : 720
+
+
 
 main :: proc() {
 
@@ -54,67 +55,23 @@ main :: proc() {
 			ui_update(mu_ctx)
 		mu.end(mu_ctx)
 
+		create_trailMap()
 
 		rl.BeginDrawing()
 			rl.ClearBackground(rl.BLACK)
-			ui_render(mu_ctx)
-			render_agents(agents[:])
+			render_trailMap()
+			//render_agents(agents[:])
+			//ui_render(mu_ctx)
 		rl.EndDrawing()
 
 		free_all(context.temp_allocator)
 	}
 
+	rl.UnloadTexture(trailMapTex)
 	//Close window on exit
 	rl.CloseWindow()
 }
 
-spawn_agents :: proc(agents: []Agent) {
-	for &agent in agents {
-		pos: rl.Vector2
-		pos.x = rand.float32() * f32(sim_width)
-		pos.y = rand.float32() * f32(sim_height)
-		agent = {
-			pos   = pos,
-			angle = rand.float32() * f32(360),
-		}
-
-	}
-
-}
-
-update_agents :: proc(trailMap: rl.Image, agents: []Agent) {
 
 
-}
 
-render_ui :: proc() {
-	rl.GuiSlider(rl.Rectangle{40, 40, 40, 40}, "Sensor Angle", "", &sensor_angle, 0.0, 60.0)
-}
-
-render_agents :: proc(agents: []Agent) {
-	for agent in agents {
-		render_agent(agent)
-
-	}
-}
-
-render_agent :: proc(agent: Agent) {
-	//Draw the lines for the sensore
-	upVector: rl.Vector2 = {0, -1}
-
-	rotatedVec := rl.Vector2Rotate(upVector, agent.angle * rl.DEG2RAD)
-	leftSensorVec := rl.Vector2Rotate(rotatedVec, sensor_angle * rl.DEG2RAD)
-	rightSensorVec := rl.Vector2Rotate(rotatedVec, -sensor_angle * rl.DEG2RAD)
-
-	endpos := agent.pos + rotatedVec * sensor_distance
-	endleftpos := agent.pos + leftSensorVec * sensor_distance
-	endrightpos := agent.pos + rightSensorVec * sensor_distance
-
-	//rotatingVec :=
-	rl.DrawLineV(agent.pos, endpos, rl.WHITE)
-	rl.DrawLineV(agent.pos, endleftpos, rl.WHITE)
-	rl.DrawLineV(agent.pos, endrightpos, rl.WHITE)
-
-	//Draw the agent itself
-	rl.DrawCircleV(agent.pos, 3.0, rl.RED)
-}

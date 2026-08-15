@@ -9,6 +9,8 @@ ui_update :: proc(ctx : ^mu.Context) {
 		mu.layout_row(ctx, {80,-1}, 0)
 		mu.label(ctx, "Sensor Angle")
 		mu.slider(ctx, &sensor_angle, 0.0, 90.0,)
+		mu.label(ctx, "Sensor Distance")
+		mu.slider(ctx, &sensor_distance, 30.0, 300.0)
 
 	}
 
